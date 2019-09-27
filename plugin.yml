@@ -1,0 +1,10 @@
+name: BattleRoyale
+author: ZasTax
+main: net.zastax.Main
+version: 1.0
+api-version: 1.13
+commands:
+  br:
+    description: Commande pour le BattleRoyale
+  setspawn:
+    description: Commande pour définir le spawn
