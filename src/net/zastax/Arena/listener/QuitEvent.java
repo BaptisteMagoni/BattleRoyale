@@ -15,6 +15,7 @@ public class QuitEvent implements Listener {
 		this.main = main;
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e){
 		Player player = e.getPlayer();

@@ -35,8 +35,12 @@ public class PlayerDeath implements Listener {
 					if(killer.equals(parena.getPlayer())){
 						parena.newKill();
 						main.getArenaManager().getArenaByPlayer(killed).getListPlayer().remove(killed);
+						try {
 						for(int i=0;i<this.getHeadInGame(killer).size();i++)
 							killed.getInventory().addItem(this.getHeadInGame(killer).get(i));
+						}catch(Exception err) {
+							System.out.println("Plus de jour dans l'arène !");
+						}
 						for(Player pls : main.getArenaManager().getArenaByPlayer(killer).getListPlayer())
 							pls.sendMessage(ChatColor.GRAY + "[" + ChatColor.GOLD + "BattleRoyale" + ChatColor.GRAY + "]" + ChatColor.GOLD + " Le joueur " + killer.getName() + " viens de tué " + killed.getName());
 					}

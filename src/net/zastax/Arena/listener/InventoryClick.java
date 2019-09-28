@@ -25,8 +25,8 @@ public class InventoryClick implements Listener {
 	@EventHandler
 	public void onClick(InventoryClickEvent e){
 		InventoryMain inv = (InventoryMain) main.getMapInventory().get("main");
-		if(e.getInventory().getTitle().equals("§2Choisissez une arène") || e.getInventory().getTitle().equals("§cChoisissez une équipe") 
-		|| e.getInventory().getTitle().equals("§cMenu des arènes")){
+		if(e.getView().getTitle().equals("§2Choisissez une arène") || e.getView().getTitle().equals("§cChoisissez une équipe") 
+		|| e.getView().getTitle().equals("§cMenu des arènes")){
 			Player player = (Player) e.getWhoClicked();
 			ItemStack itemClick = e.getCurrentItem();
 			if(itemClick != null){

@@ -40,7 +40,7 @@ public class Main extends JavaPlugin{
 	private ArenaManager arenaManager;
 	private KitGunManager kitGunManager;
 	private BankManager bankmanager;
-	private TabListManager tablist;
+	private TabListManager tablistmanager;
 	
 	private Location spawn;
 	
@@ -74,12 +74,14 @@ public class Main extends JavaPlugin{
 		for(Player pls : Bukkit.getOnlinePlayers())
 			listPlayer.add(new CPlayer(this, pls));
 		kitGunManager = new KitGunManager();
-		tablist = new TabListManager(this);
+		tablistmanager = new TabListManager(this);
 		
 		loadConfig();
+		
 		mapInventory.put("main", new InventoryMain(this));
 		mapInventory.put("arenachoice", new InventoryArenaChoice(this));
 		mapInventory.put("team", new InventoryTeam(this));
+		
 		getCommand("br").setExecutor(new registerCommand(this));
 		getCommand("setspawn").setExecutor(new cmdSetSpawnServer(this));
 		try{
@@ -178,7 +180,7 @@ public class Main extends JavaPlugin{
 	}
 	
 	public TabListManager getListManager(){
-		return tablist;
+		return tablistmanager;
 	}
 	
 	public double[] StringParseDouble(String coord){
@@ -230,22 +232,34 @@ public class Main extends JavaPlugin{
 	private Location getLocationSpawnServer(){
 		World w = Bukkit.getServer().getWorld(this.getServerConfig().getString("worldspawn"));
 		double tab[] = this.StringParseDouble(this.getServerConfig().getString("spawn"));
+		if(w != null || tab.length == 0) 
+			return new Location(Bukkit.getWorld("world"), 0, 0, 0);
 		return new Location(w, tab[0], tab[1], tab[2]);
 	}
 	
 	private void loadConfig(){
 		ConfigurationSection sectionArena = arenaConfig.getConfigurationSection("Arena");
-		for(String arena_name: sectionArena.getKeys(false)){
-			int maxPlayer = sectionArena.getInt(arena_name + ".maxPlayer");
-			int minPlayer = sectionArena.getInt(arena_name + ".minPlayer");
-			boolean chat = sectionArena.getBoolean(arena_name + ".chat");
-			String arenaType = sectionArena.getString(arena_name + ".type");
-			String worldName = sectionArena.getString(arena_name + ".World");
-			if(arenaType.equals("SOLO"))
-				this.arenaManager.createArena(worldName, arena_name, maxPlayer, minPlayer, chat, ArenaType.SOLO);
-			else
-				this.arenaManager.createArena(worldName, arena_name, maxPlayer, minPlayer, chat, ArenaType.TEAM);
+		if(sectionArena != null) {
+			for(String arena_name: sectionArena.getKeys(false)){
+				int maxPlayer = sectionArena.getInt(arena_name + ".maxPlayer");
+				int minPlayer = sectionArena.getInt(arena_name + ".minPlayer");
+				boolean chat = sectionArena.getBoolean(arena_name + ".chat");
+				String arenaType = sectionArena.getString(arena_name + ".type");
+				String worldName = sectionArena.getString(arena_name + ".World");
+				if(arenaType.equals("SOLO"))
+					this.arenaManager.createArena(worldName, arena_name, maxPlayer, minPlayer, chat, ArenaType.SOLO);
+				else
+					this.arenaManager.createArena(worldName, arena_name, maxPlayer, minPlayer, chat, ArenaType.TEAM);
+			}
+		}else {
+			System.out.println("Aucune arène de détecté !");
 		}
+	}
+	
+	private void createInventory() {
+		mapInventory.put("main", new InventoryMain(this));
+		mapInventory.put("arenachoice", new InventoryArenaChoice(this));
+		mapInventory.put("team", new InventoryTeam(this));
 	}
 	
 	private void run(){
@@ -260,7 +274,7 @@ public class Main extends JavaPlugin{
 					cp.updateScoreboard();
 					cp.loadItemInHand();
 				}
-				tablist.loadTabList();
+				tablistmanager.loadTabList();
 			}
 			
 		}, 20, 20);

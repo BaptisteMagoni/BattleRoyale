@@ -30,7 +30,11 @@ public class JoinEvent implements Listener {
 		}else
 			cp.getBank().addMoney(main.getBankConfig().getDouble("Player." + cp.getName() + ".money"));
 		cp.setPlayerState(PlayerState.NOTINGAME);
-		player.teleport(main.getSpawnServer());
+		try {
+			player.teleport(main.getSpawnServer());
+		}catch(Exception err) {
+			System.out.println("Le plugin n'a pas trouvé de spawn !");
+		}
 		player.getInventory().addItem(main.getItem(Material.COMPASS, "§cMenu des arènes"));
 		player.updateInventory();
 	}
